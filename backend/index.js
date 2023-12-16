@@ -72,6 +72,7 @@ const url = require('url');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
 require('dotenv').config();
 
 // MongoDB connection
@@ -231,6 +232,13 @@ const handleDeveloperOnboarding = async (req, res) => {
 
 
 
+//initialising cors 
+const corsOptions = {
+  origin: '*', 
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  optionsSuccessStatus: 204,
+};
+
 
 // here we create a server with the help of http 
 const server = http.createServer((req, res) => {
@@ -238,8 +246,9 @@ const server = http.createServer((req, res) => {
   const { pathname } = parsedUrl;
 
 
-
-  // here all the post method's path or api present 
+//using cors to access all the api's in our frontend
+  cors(corsOptions)(req, res, () => {
+    // here all the post method's path or api present 
   if (req.method === 'POST') {
     if (pathname === '/users/register') {
       let data = '';
@@ -274,6 +283,7 @@ const server = http.createServer((req, res) => {
     res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('Not Found');
   }
+});
 });
 
 
